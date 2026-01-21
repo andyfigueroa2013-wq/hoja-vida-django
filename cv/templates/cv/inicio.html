@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Hoja de Vida</title>
+
+    <!-- ICONOS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #4e73df, #1cc88a);
+            margin: 0;
+            padding: 0;
+        }
+
+        .contenedor {
+            max-width: 1000px;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+        }
+
+        /* ===== COLUMNA IZQUIERDA ===== */
+        .lateral {
+            background: #0a66c2;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .foto {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            margin-bottom: 15px;
+        }
+
+        .nombre {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+
+        .dato {
+            font-size: 14px;
+            margin: 8px 0;
+        }
+
+        .dato i {
+            margin-right: 8px;
+        }
+
+        .titulo-lateral {
+            margin-top: 25px;
+            font-size: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+            padding-bottom: 5px;
+        }
+
+        /* ===== COLUMNA DERECHA ===== */
+        .contenido {
+            background: linear-gradient(135deg, #ffffff, #f0f4ff);
+            padding: 35px;
+        }
+
+        .seccion {
+            margin-bottom: 25px;
+        }
+
+        .seccion h2 {
+            font-size: 20px;
+            color: #2e59d9;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .seccion h2 i {
+            margin-right: 10px;
+            color: #1cc88a;
+        }
+
+        .seccion p {
+            color: #333;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .certificado-item {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .certificado-item h3 {
+            margin: 5px 0;
+            color: #2e59d9;
+        }
+
+        .certificado-item img {
+            max-width: 200px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .sin-datos {
+            text-align: center;
+            padding: 40px;
+            color: white;
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .contenedor {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+{% if hoja %}
+
+<div class="contenedor">
+
+    <!-- COLUMNA IZQUIERDA -->
+    <div class="lateral">
+        {% if hoja.foto %}
+            <img src="{{ hoja.foto.url }}" class="foto">
+        {% else %}
+            <img src="https://via.placeholder.com/150" class="foto">
+        {% endif %}
+
+        <h1 class="nombre">{{ hoja.nombre }}</h1>
+
+        <div class="dato"><i class="fa-solid fa-envelope"></i> {{ hoja.email }}</div>
+        <div class="dato"><i class="fa-solid fa-phone"></i> {{ hoja.telefono }}</div>
+
+        <div class="titulo-lateral">Habilidades</div>
+        <p>{{ hoja.habilidades }}</p>
+    </div>
+
+    <!-- COLUMNA DERECHA -->
+    <div class="contenido">
+
+        <div class="seccion">
+            <h2><i class="fa-solid fa-user"></i> Perfil Profesional</h2>
+            <p>{{ hoja.perfil }}</p>
+        </div>
+
+        <div class="seccion">
+            <h2><i class="fa-solid fa-graduation-cap"></i> Educación</h2>
+            <p>{{ hoja.educacion }}</p>
+        </div>
+
+        <div class="seccion">
+            <h2><i class="fa-solid fa-briefcase"></i> Experiencia Laboral</h2>
+            <p>{{ hoja.experiencia }}</p>
+        </div>
+
+        <!-- ===== CERTIFICADOS ===== -->
+        <div class="seccion">
+            <h2><i class="fa-solid fa-certificate"></i> Certificados</h2>
+
+            {% if certificados %}
+                {% for cert in certificados %}
+                    <div class="certificado-item">
+                        <h3>{{ cert.titulo }}</h3>
+
+                        {% if cert.descripcion %}
+                            <p>{{ cert.descripcion }}</p>
+                        {% endif %}
+
+                        {% if cert.fecha %}
+                            <p><strong>Fecha:</strong> {{ cert.fecha }}</p>
+                        {% endif %}
+
+                        {% if cert.imagen %}
+                            <img src="{{ cert.imagen.url }}" alt="{{ cert.titulo }}">
+                        {% endif %}
+
+                        {% if cert.pdf %}
+                            <p>
+                                <a href="{{ cert.pdf.url }}" target="_blank">
+                                    📄 Ver certificado
+                                </a>
+                            </p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No hay certificados registrados.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+{% else %}
+    <p class="sin-datos">No hay datos registrados.</p>
+{% endif %}
+
+</body>
+</html>

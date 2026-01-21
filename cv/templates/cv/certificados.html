@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Certificados</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(135deg, #4e73df, #1cc88a);
+            margin: 0;
+            padding: 0;
+        }
+
+        .contenedor {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .certificado {
+            border-bottom: 1px solid #ddd;
+            padding: 20px 0;
+        }
+
+        img {
+            max-width: 200px;
+            display: block;
+            margin-top: 10px;
+        }
+
+        a {
+            color: #4e73df;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="contenedor">
+    <h1>📜 Certificados</h1>
+
+    {% for c in certificados %}
+        <div class="certificado">
+            <h3>{{ c.titulo }}</h3>
+            <p>{{ c.descripcion }}</p>
+            <p><strong>Fecha:</strong> {{ c.fecha }}</p>
+
+            {% if c.imagen %}
+                <img src="{{ c.imagen.url }}">
+            {% endif %}
+
+            {% if c.pdf %}
+                <p><a href="{{ c.pdf.url }}" target="_blank">📄 Ver certificado PDF</a></p>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>No hay certificados registrados.</p>
+    {% endfor %}
+</div>
+
+</body>
+</html>
