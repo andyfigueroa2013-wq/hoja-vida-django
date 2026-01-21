@@ -4,7 +4,7 @@ Django settings for proyecto_cv project.
 
 from pathlib import Path
 import os
-import dj_database_url # Recomendado para bases de datos en Render
+import dj_database_url
 
 # ===============================
 # BASE DIR
@@ -20,18 +20,17 @@ SECRET_KEY = os.environ.get(
     'django-insecure-4l1khm#8r1oil#(6$#zsdis)^^aur*mlnc_lzh8_3yht)x%2(&'
 )
 
-# DEBUG es False en Render, True en local
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*'] # En producción puedes poner ['hoja-vida-django.onrender.com']
+ALLOWED_HOSTS = ['*']
 
 
 # ===============================
 # APPLICATIONS
 # ===============================
 INSTALLED_APPS = [
-    # Cloudinary debe ir ANTES de staticfiles
-    'cloudinary_storage', 
+    # Cloudinary DEBE ir primero para que gestione los archivos MEDIA
+    'cloudinary_storage',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,8 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cloudinary',
-
-    # Tu App
     'cv',
 ]
 
@@ -50,7 +47,7 @@ INSTALLED_APPS = [
 # ===============================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Para archivos CSS/JS
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,7 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.media', # IMPORTANTE para imágenes
+                'django.template.context_processors.media', # Habilita URLs de imágenes en plantillas
             ],
         },
     },
@@ -88,8 +85,6 @@ WSGI_APPLICATION = 'proyecto_cv.wsgi.application'
 # ===============================
 # DATABASE
 # ===============================
-# Si tienes una URL de base de datos en Render (PostgreSQL), la usará. 
-# Si no, usará SQLite (pero recuerda que los datos se borran al reiniciar).
 DATABASES = {
     'default': dj_database_url.config(
         default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
@@ -104,21 +99,18 @@ DATABASES = {
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Configuración de WhiteNoise para CSS
+# WhiteNoise para archivos estáticos (CSS, JS)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Configuración de Medios (Imágenes y PDFs)
+# Configuración de Medios (Cloudinary)
 MEDIA_URL = '/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-
-# ===============================
-# CLOUDINARY CONFIG
-# ===============================
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
     'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    'SECURE': True, # Esto asegura que use HTTPS
 }
 
 
